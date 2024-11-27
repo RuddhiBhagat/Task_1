@@ -1,0 +1,34 @@
+name: Push HelloWorld to Branch
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the 'main' branch (you can change this if needed)
+      
+jobs:
+  push-file-to-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Create hello_world.py
+        run: |
+          echo 'print("Hello, World!")' > hello_world.py
+
+      - name: Commit and push the file to a specific branch
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git checkout -b new-branch   # Replace 'new-branch' with the branch you want to push to
+          git add hello_world.py
+          git commit -m "Add hello_world.py"
+          git push origin new-branch   # This will push the file to 'new-branch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
